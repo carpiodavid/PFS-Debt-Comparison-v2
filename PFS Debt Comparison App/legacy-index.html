@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Providence Financial Solutions | Debt Relief Comparison Dashboard</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="brand"><span class="brand-mark"></span>Providence Financial Solutions</div>
+        <h1>Debt Relief Comparison Dashboard</h1>
+        <p class="subhead">Use the slider to show clients how typical credit card minimums compare with debt settlement and Providence Financial Solutions' Legal Debt Resolution structure. Includes a client-ready PDF export reps can send directly.</p>
+      </div>
+      <div class="hero-badge">Rep Dashboard • Close-Piece PDF Export</div>
+    </div>
+
+    <div class="main-grid">
+      <div class="card gold">
+        <h2 class="section-title">Inputs</h2>
+        <div class="section-note">Adjust debt load and APR. The comparison cards update live, and the export builds a clean client-facing PDF that can be sent as-is after the call.</div>
+
+        <div class="control">
+          <div class="label-row">
+            <span>Total debt load</span>
+            <span class="big-value" id="debtValue">$25,000</span>
+          </div>
+          <input id="debtSlider" type="range" min="1000" max="350000" step="500" value="25000" />
+        </div>
+
+        <div class="control">
+          <div class="label-row">
+            <span>Average credit card APR</span>
+            <span class="big-value" id="aprValue">19.57%</span>
+          </div>
+          <input id="aprSlider" type="range" min="8" max="35" step="0.01" value="19.57" />
+        </div>
+
+        <div class="mini-grid">
+          <div>
+            <div class="label-row"><span>Manual debt entry</span></div>
+            <input id="debtInput" type="number" min="0" step="100" value="25000" />
+          </div>
+          <div>
+            <div class="label-row"><span>Manual APR entry</span></div>
+            <input id="aprInput" type="number" min="0" max="99" step="0.01" value="19.57" />
+          </div>
+        </div>
+
+        <div class="pdf-panel">
+          <h2 class="section-title">Scenario export</h2>
+          <div class="mini-grid">
+            <div>
+              <div class="label-row"><span>Client name</span></div>
+              <input id="clientName" type="text" placeholder="John Smith" />
+            </div>
+            <div>
+              <div class="label-row"><span>Rep name</span></div>
+              <input id="repName" type="text" placeholder="David" />
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <div class="label-row"><span>Scenario notes</span></div>
+            <textarea id="scenarioNotes" placeholder="Use this area for pain points, urgency, or what the client said matters most."></textarea>
+          </div>
+          <div class="note-chip">Exports a clean, client-facing PDF styled for direct follow-up.</div>
+        </div>
+
+        <div class="buttons">
+          <button id="resetBtn">Reset</button>
+          <button id="copyBtn" class="ghost">Copy summary</button>
+          <button id="pdfBtn">Export PDF</button>
+        </div>
+
+        <div class="summary" id="summaryText"></div>
+
+        <div class="footnotes">
+          <strong class="gold-text">Built-in assumptions:</strong><br>
+          Credit card minimums use the greater of 1% of balance + monthly interest, or $35.<br>
+          Debt settlement typical timeline is fixed at <strong>55 months</strong> in this tool.<br>
+          Legal Debt Resolution timeline is fixed at <strong>24 months</strong>. Monthly pricing follows the uploaded Providence / Resolution Processing payment guide through $127,500, then caps at <strong>$1,500/month</strong> for debt loads of <strong>$130,000 and above</strong>.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">Live comparison</h2>
+        <div class="program-grid">
+          <div class="program">
+            <div class="tag">Status quo</div>
+            <h3>Credit Card Minimums</h3>
+            <div class="stat-grid">
+              <div class="stat"><div class="k">Starting payment</div><div class="v" id="minPayment">$657</div></div>
+              <div class="stat"><div class="k">Payoff time</div><div class="v" id="payoffTime">22y 0m</div></div>
+              <div class="stat"><div class="k">Total paid</div><div class="v" id="totalPaid">$0</div></div>
+              <div class="stat"><div class="k">Interest paid</div><div class="v" id="interestPaid">$0</div></div>
+            </div>
+            <ul>
+              <li>Illustrates the cost of carrying the balance at the selected APR.</li>
+              <li>Shows why minimums often keep clients trapped for years.</li>
+            </ul>
+          </div>
+
+          <div class="program">
+            <div class="tag">Typical debt settlement</div>
+            <h3>Debt Settlement</h3>
+            <div class="stat-grid">
+              <div class="stat"><div class="k">Monthly deposit</div><div class="v" id="settlementMonthly" class="editable">$486</div></div>
+              <div class="stat"><div class="k">Typical timeline</div><div class="v" id="settlementTimeline" class="editable">55 mo</div></div>
+              <div class="stat"><div class="k">Total program cost</div><div class="v" id="settlementPrincipal">$12,500</div></div>
+              <div class="stat"><div class="k">Mode</div><div class="v" id="settlementFees">Fixed avg</div></div>
+            </div>
+            <label class="override-toggle"><input id="settlementOverrideToggle" type="checkbox" /> Use manual competitor quote</label>
+            <div class="override-fields" id="settlementOverrideFields" hidden>
+              <div>
+                <div class="label-row"><span>Manual monthly</span></div>
+                <input id="settlementMonthlyInput" type="number" min="0" step="1" placeholder="550" />
+              </div>
+              <div>
+                <div class="label-row"><span>Manual months</span></div>
+                <input id="settlementMonthsInput" type="number" min="1" step="1" placeholder="50" />
+              </div>
+            </div>
+            <div class="tiny-note">Defaults to fixed averages. When manual mode is on, double-click the monthly or timeline number above to quickly override it.</div>
+            <ul>
+              <li>Uses a simple illustration based on a 50% negotiated payoff and a 20% fee unless manual competitor quote mode is enabled.</li>
+              <li>Timeline defaults to 55 months for rep comparisons.</li>
+            </ul>
+          </div>
+
+          <div class="program featured">
+            <div class="tag">Providence / Resolution Processing</div>
+            <h3>Legal Debt Resolution</h3>
+            <div class="stat-grid">
+              <div class="stat"><div class="k">Monthly payment</div><div class="v" id="legalMonthly">$350</div></div>
+              <div class="stat"><div class="k">Timeline</div><div class="v" id="legalTimeline">24 mo</div></div>
+              <div class="stat"><div class="k">Pricing tier</div><div class="v" id="legalTier">Up to $25k</div></div>
+              <div class="stat"><div class="k">Total paid</div><div class="v" id="legalTotal">$8,400</div></div>
+            </div>
+            <ul>
+              <li>Monthly payment follows the uploaded pricing guide up to $127,500, then caps at $1,500/month for debts of $130,000 and above.</li>
+              <li>Timeline is always illustrated as 24 months in this dashboard.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Credit card payment</th>
+                <th>Interest</th>
+                <th>Remaining balance</th>
+              </tr>
+            </thead>
+            <tbody id="amortRows"></tbody>
+          </table>
+        </div>
+
+        <div class="footnotes">
+          This page is an <strong>illustrative rep tool</strong>. Actual creditor minimums, settlement results, fees, and legal resolution outcomes vary by account, creditor, servicing terms, and state.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./assets/app.js"></script>
+</body>
+</html>
