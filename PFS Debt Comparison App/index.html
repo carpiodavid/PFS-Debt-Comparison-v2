@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Providence Financial Solutions · Debt Relief Comparison</title>
+  <meta name="description" content="Client-facing debt relief comparison dashboard — credit card minimums, debt settlement, and Legal Debt Resolution side by side." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body class="mode-editorial">
+
+  <div class="app">
+
+    <!-- Topbar -->
+    <header class="topbar" role="banner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <span class="brand-name">Providence Financial Solutions</span>
+          <span class="brand-kicker">Debt Relief Comparison</span>
+        </span>
+      </div>
+
+      <div class="topbar-right">
+        <div class="mode-switch" role="tablist" aria-label="View mode">
+          <button type="button" data-mode="editorial" aria-pressed="true">Editorial</button>
+          <button type="button" data-mode="analyst" aria-pressed="false">Analyst</button>
+          <button type="button" data-mode="presenter" aria-pressed="false">Presenter</button>
+        </div>
+        <span class="topbar-badge">Rep Dashboard · Client-ready PDF</span>
+      </div>
+    </header>
+
+    <main class="stage">
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="eyebrow">The Comparison</div>
+        <h1>Three paths out of debt. <em>One clear finish line.</em></h1>
+        <p class="dek">
+          Move the slider. See in seconds how credit card minimums, traditional debt
+          settlement, and Providence's Legal Debt Resolution stack up — monthly cost,
+          total paid, and the date a client can expect to be debt-free.
+        </p>
+        <div class="hero-meta" aria-hidden="true">
+          <div class="hero-meta-item">
+            <div class="k">Debt Range</div>
+            <div class="v">$1k – $350k</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="k">LDR Timeline</div>
+            <div class="v">24 months</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="k">Monthly Cap</div>
+            <div class="v">$1,500</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hero chart: the anchor visualization -->
+      <section class="paper accent chart-card" aria-labelledby="chart-title">
+        <div class="chart-head">
+          <div>
+            <div class="section-eyebrow"><span class="num">01</span>At a glance</div>
+            <h2 class="section-title" id="chart-title">How the three paths compare</h2>
+            <p class="chart-head .sub" style="color: var(--fg-mute); font-size:13px; margin:4px 0 0;">
+              For <span id="chartDebtRef">$25,000</span> of debt at <span id="chartAprRef">19.57%</span> APR.
+            </p>
+          </div>
+          <div class="chart-legend" role="tablist" aria-label="Chart metric">
+            <button type="button" data-metric="total" aria-pressed="true">Total paid</button>
+            <button type="button" data-metric="monthly" aria-pressed="false">Monthly</button>
+            <button type="button" data-metric="months" aria-pressed="false">Timeline</button>
+          </div>
+        </div>
+
+        <div class="bars" id="chartBars" aria-hidden="true">
+          <!-- Bars injected by JS -->
+        </div>
+
+        <div class="chart-footer">
+          <div class="chart-callout" id="chartCallout"></div>
+          <button class="btn btn-primary" id="pdfBtn" type="button">
+            <span>Export client PDF</span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Canvas: controls + programs -->
+      <section class="canvas" style="margin-top: clamp(28px, 4vw, 48px);">
+
+        <!-- Controls -->
+        <aside class="paper" aria-labelledby="inputs-title">
+          <div class="section-eyebrow"><span class="num">02</span>Inputs</div>
+          <h2 class="section-title" id="inputs-title">Scenario</h2>
+          <p class="section-note">
+            Adjust debt load and APR. Everything on the page updates live.
+          </p>
+
+          <div class="control">
+            <div class="label-row">
+              <span class="k">Total debt</span>
+              <span class="big-value" id="debtValue">$25,000</span>
+            </div>
+            <input id="debtSlider" type="range" min="1000" max="350000" step="500" value="25000" aria-label="Total debt load" />
+            <div class="tick-rail" aria-hidden="true">
+              <span>$1k</span><span>$90k</span><span>$175k</span><span>$260k</span><span>$350k</span>
+            </div>
+          </div>
+
+          <div class="control">
+            <div class="label-row">
+              <span class="k">Credit card APR</span>
+              <span class="big-value" id="aprValue">19.57%</span>
+            </div>
+            <input id="aprSlider" type="range" min="8" max="35" step="0.01" value="19.57" aria-label="Credit card APR" />
+            <div class="tick-rail" aria-hidden="true">
+              <span>8%</span><span>15%</span><span>22%</span><span>28%</span><span>35%</span>
+            </div>
+          </div>
+
+          <div class="control">
+            <div class="field-grid">
+              <div class="field">
+                <label for="debtInput">Manual debt</label>
+                <input id="debtInput" type="number" min="0" step="100" value="25000" />
+              </div>
+              <div class="field">
+                <label for="aprInput">Manual APR</label>
+                <input id="aprInput" type="number" min="0" max="99" step="0.01" value="19.57" />
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Programs -->
+        <section aria-labelledby="programs-title" style="display: flex; flex-direction: column; gap: 20px;">
+          <header>
+            <div class="section-eyebrow"><span class="num">03</span>Side by side</div>
+            <h2 class="section-title" id="programs-title">The three structures</h2>
+          </header>
+
+          <div class="programs">
+            <article class="program">
+              <span class="tag">Status quo</span>
+              <h3>Credit Card Minimums</h3>
+              <div class="headline-stat">
+                <span class="v" id="minPayment">$657</span>
+                <span class="u">/ month, starting</span>
+              </div>
+              <ul class="stat-list">
+                <li><span class="k">Payoff time</span><span class="v" id="payoffTime">22y</span></li>
+                <li><span class="k">Total paid</span><span class="v" id="totalPaid">$0</span></li>
+                <li><span class="k">Interest alone</span><span class="v" id="interestPaid">$0</span></li>
+              </ul>
+              <div class="notes"><strong>Why this fails:</strong> interest absorbs most of each payment; clients stay trapped for years.</div>
+            </article>
+
+            <article class="program">
+              <span class="tag">Typical settlement</span>
+              <h3>Debt Settlement</h3>
+              <div class="headline-stat">
+                <span class="v editable" id="settlementMonthly">$486</span>
+                <span class="u">/ month</span>
+              </div>
+              <ul class="stat-list">
+                <li><span class="k">Timeline</span><span class="v editable" id="settlementTimeline">55 mo</span></li>
+                <li><span class="k">Program cost</span><span class="v" id="settlementPrincipal">$12,500</span></li>
+                <li><span class="k">Mode</span><span class="v" id="settlementFees">Fixed avg</span></li>
+              </ul>
+
+              <label class="override">
+                <div class="override-head">
+                  <span class="label">Use manual competitor quote</span>
+                  <input class="toggle" id="settlementOverrideToggle" type="checkbox" />
+                </div>
+                <div class="override-body" id="settlementOverrideFields" hidden>
+                  <div class="field">
+                    <label for="settlementMonthlyInput">Monthly</label>
+                    <input id="settlementMonthlyInput" type="number" min="0" step="1" placeholder="550" />
+                  </div>
+                  <div class="field">
+                    <label for="settlementMonthsInput">Months</label>
+                    <input id="settlementMonthsInput" type="number" min="1" step="1" placeholder="50" />
+                  </div>
+                </div>
+              </label>
+
+              <div class="notes">Defaults to 50% negotiated payoff + 20% fees over 55 months. Double-click the monthly or timeline when manual mode is on.</div>
+            </article>
+
+            <article class="program featured">
+              <span class="tag">Providence · Recommended</span>
+              <h3>Legal Debt Resolution</h3>
+              <div class="headline-stat">
+                <span class="v" id="legalMonthly">$350</span>
+                <span class="u">/ month · 24 months</span>
+              </div>
+              <ul class="stat-list">
+                <li><span class="k">Pricing tier</span><span class="v" id="legalTier">Up to $25k</span></li>
+                <li><span class="k">Total paid</span><span class="v" id="legalTotal">$8,400</span></li>
+                <li><span class="k">Finish date</span><span class="v" id="legalFinish">—</span></li>
+              </ul>
+              <div class="notes"><strong>Defined payment, defined end.</strong> Follows the Providence pricing guide through $127,500, capped at $1,500/mo above $130k.</div>
+            </article>
+          </div>
+
+          <!-- Summary -->
+          <div class="summary" id="summaryText" style="padding: 28px 32px; text-align: left;"></div>
+        </section>
+      </section>
+
+      <!-- Export + notes -->
+      <section class="paper export-card" style="margin-top: clamp(28px, 4vw, 48px);">
+        <div class="export-card-head">
+          <div>
+            <div class="section-eyebrow"><span class="num">04</span>Close piece</div>
+            <h2 class="section-title">Send the client a one-pager</h2>
+            <p class="section-note">Prepared for the call — a single landscape page they can reference after you hang up.</p>
+          </div>
+        </div>
+
+        <div class="field-grid" style="gap:14px;">
+          <div class="field">
+            <label for="clientName">Client name</label>
+            <input id="clientName" type="text" placeholder="John Smith" />
+          </div>
+          <div class="field">
+            <label for="repName">Rep name</label>
+            <input id="repName" type="text" placeholder="David" />
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="scenarioNotes">Scenario notes (optional)</label>
+          <textarea id="scenarioNotes" placeholder="What the client said mattered most. Pain points, urgency, specifics."></textarea>
+        </div>
+
+        <div class="button-row">
+          <button class="btn btn-primary" id="pdfBtn2" type="button"><span>Export PDF</span><span class="arrow">→</span></button>
+          <button class="btn btn-ghost" id="copyBtn" type="button">Copy spoken summary</button>
+          <button class="btn btn-ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+      </section>
+
+      <!-- Amort table (collapsed by default on smaller layouts could be an option) -->
+      <section class="paper table-block" style="margin-top: clamp(28px, 4vw, 48px);">
+        <div class="table-head">
+          <div>
+            <div class="section-eyebrow"><span class="num">05</span>Detail</div>
+            <h3>Credit card amortization — first 12 months</h3>
+          </div>
+          <span class="table-hint">Illustrative</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Payment</th>
+                <th>Interest</th>
+                <th>Remaining</th>
+              </tr>
+            </thead>
+            <tbody id="amortRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="fineprint">
+        <strong style="color: var(--fg-dim);">Built-in assumptions.</strong>
+        Credit card minimums use the greater of 1% of balance + monthly interest, or $35.
+        Debt settlement timeline is fixed at 55 months. Legal Debt Resolution timeline is
+        fixed at 24 months. Monthly pricing follows the uploaded Providence / Resolution
+        Processing payment guide through $127,500, then caps at $1,500/month for debt
+        loads of $130,000 and above. This page is an illustrative rep tool; actual
+        creditor minimums, settlement results, fees, and legal resolution outcomes vary by
+        account, creditor, servicing terms, and state.
+      </div>
+    </main>
+  </div>
+
+  <!-- Tweaks panel -->
+  <aside id="tweaks" aria-label="Tweaks">
+    <h4>Tweaks</h4>
+    <div class="tweak-row">
+      <label for="tweak-accent">Accent</label>
+      <select id="tweak-accent">
+        <option value="gold">Gold (default)</option>
+        <option value="ivory">Ivory mono</option>
+        <option value="brass">Brass warm</option>
+      </select>
+    </div>
+    <div class="tweak-row">
+      <label for="tweak-serif">Display serif</label>
+      <select id="tweak-serif">
+        <option value="instrument">Instrument Serif</option>
+        <option value="fraunces">Fraunces</option>
+        <option value="cormorant">Cormorant Garamond</option>
+      </select>
+    </div>
+    <div class="tweak-row">
+      <label for="tweak-density">Density</label>
+      <select id="tweak-density">
+        <option value="airy">Airy (default)</option>
+        <option value="compact">Compact</option>
+      </select>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    window.__TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{"accent":"gold","serif":"instrument","density":"airy","defaultMode":"editorial"}/*EDITMODE-END*/;
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="./assets/app.js"></script>
+</body>
+</html>
